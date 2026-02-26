@@ -1,9 +1,11 @@
 {
   "season": 1,
   "gameStarted": false,
-  "alivePlayers": [],
+  "alivePlayers": [
+    "KieranK07"
+  ],
   "eliminatedPlayers": [],
   "winner": null,
-  "lastEvent": "Waiting for players to join...",
+  "lastEvent": "🎮 KieranK07 has joined the battle!",
   "lastTick": null
 }

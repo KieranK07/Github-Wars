@@ -18,13 +18,15 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 
 Open an issue to join the battle!
 
-- **Last Event:** Waiting for players to join...
+- **Last Event:** 🎮 KieranK07 has joined the battle!
 - **Last Tick:** Unknown
 - **Next Event:** Unknown (awaiting next scheduled tick)
 
-### 💚 Alive Players (0)
+---
 
-*No players alive*
+### 💚 Alive Players (1)
+
+1. **[@KieranK07](https://github.com/KieranK07)**
 
 ### 💀 Eliminated Players (0)
 

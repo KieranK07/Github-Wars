@@ -2,11 +2,12 @@
   "season": 4,
   "gameStarted": true,
   "alivePlayers": [
-    "KieranK07",
     "crgfrd5d9r-png"
   ],
-  "eliminatedPlayers": [],
-  "winner": null,
-  "lastEvent": "🎮 crgfrd5d9r-png has joined! The battle has begun with 2 players!",
-  "nextEliminationTime": "2026-02-26T16:20:55.222Z"
+  "eliminatedPlayers": [
+    "KieranK07"
+  ],
+  "winner": "crgfrd5d9r-png",
+  "lastEvent": "💀 KieranK07 has been eliminated!\n👑 crgfrd5d9r-png is the winner of Season 4!",
+  "nextEliminationTime": null
 }

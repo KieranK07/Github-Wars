@@ -1,0 +1,36 @@
+name: Update Timer
+
+on:
+  schedule:
+    # Run every 5 minutes
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # Allow manual trigger for testing
+
+permissions:
+  contents: write
+
+jobs:
+  update-timer:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Update README timer only
+        env:
+          EVENT_NAME: 'timer_update'
+        run: node game.js
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md
+          git diff --staged --quiet || git commit -m "⏱️ Timer update: $(date)"
+          git push

@@ -434,6 +434,15 @@ async function main() {
       // Now reset for next season
       resetSeason(state);
     }
+  } else if (EVENT_NAME === 'timer_update') {
+    console.log('Processing timer update only...');
+    
+    // Only update README with fresh timer, don't modify game state
+    updateReadme(state);
+    
+    console.log('');
+    console.log('=== Execution Complete ===');
+    return;
   }
   
   // Save state and update README

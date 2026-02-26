@@ -1,12 +1,9 @@
 {
-  "season": 1,
-  "gameStarted": true,
-  "alivePlayers": [
-    "KieranK07",
-    "crgfrd5d9r-png"
-  ],
+  "season": 2,
+  "gameStarted": false,
+  "alivePlayers": [],
   "eliminatedPlayers": [],
   "winner": null,
-  "lastEvent": "🎮 crgfrd5d9r-png has joined! The battle has begun with 2 players!",
+  "lastEvent": "Season 2 is ready! Open an issue to join the battle!",
   "nextEliminationTime": null
 }

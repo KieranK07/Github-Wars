@@ -1,0 +1,10 @@
+{
+  "season": 1,
+  "gameStarted": false,
+  "alivePlayers": [],
+  "eliminatedPlayers": [],
+  "winner": null,
+  "lastEvent": "Waiting for players to join..."
+}
+
+

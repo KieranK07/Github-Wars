@@ -1,11 +1,12 @@
 {
   "season": 2,
-  "gameStarted": false,
+  "gameStarted": true,
   "alivePlayers": [
-    "KieranK07"
+    "KieranK07",
+    "crgfrd5d9r-png"
   ],
   "eliminatedPlayers": [],
   "winner": null,
-  "lastEvent": "🎮 KieranK07 has joined the battle!",
-  "nextEliminationTime": null
+  "lastEvent": "🎮 crgfrd5d9r-png has joined! The battle has begun with 2 players!",
+  "nextEliminationTime": "2026-02-26T15:36:52.096Z"
 }

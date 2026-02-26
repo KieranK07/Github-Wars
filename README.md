@@ -44,4 +44,4 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 
 ---
 
-*Powered by GitHub Actions • Updates every 5 minutes*
+*Powered by GitHub Actions • Updates every 5 minutes* 

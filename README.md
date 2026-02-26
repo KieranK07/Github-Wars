@@ -14,23 +14,25 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 
 ## 📊 Season 5 Status
 
-### ⚔️ Battle in Progress
+### 👑 WINNER: crgfrd5d9r-png
 
-**2 players** are fighting for survival!
+**crgfrd5d9r-png** has won Season 5!
 
-- **Last Event:** 🎮 crgfrd5d9r-png has joined! The battle has begun with 2 players!
-- **Next Elimination:** 5 min from now
+🎉 New season starting soon...
+
+- **Last Event:** 💀 KieranK07 has been eliminated!
+👑 crgfrd5d9r-png is the winner of Season 5!
+- **Next Elimination:** Waiting for game to start
 
 ---
 
-### 💚 Alive Players (2)
+### 💚 Alive Players (1)
 
-1. **[@KieranK07](https://github.com/KieranK07)**
-2. **[@crgfrd5d9r-png](https://github.com/crgfrd5d9r-png)**
+1. **[@crgfrd5d9r-png](https://github.com/crgfrd5d9r-png)**
 
-### 💀 Eliminated Players (0)
+### 💀 Eliminated Players (1)
 
-*No eliminations yet*
+1. ~~[@KieranK07](https://github.com/KieranK07)~~
 
 ---
 

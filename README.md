@@ -18,7 +18,7 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 
 Open an issue to join the battle!
 
-**Last Event:** 🎮 KieranK07 has joined the battle!
+**Last Event:** KieranK07 tried to join again, but they're already in the game!
 
 ---
 

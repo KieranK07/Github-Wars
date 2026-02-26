@@ -45,7 +45,7 @@ function createDefaultState() {
     eliminatedPlayers: [],
     winner: null,
     lastEvent: 'Waiting for players to join...',
-    lastTick: null
+    nextEliminationTime: null
   };
 }
 
@@ -64,7 +64,7 @@ function normalizeState(rawState, options = {}) {
     eliminatedPlayers: [],
     winner: typeof state.winner === 'string' ? state.winner : null,
     lastEvent: typeof state.lastEvent === 'string' ? state.lastEvent : base.lastEvent,
-    lastTick: typeof state.lastTick === 'string' || state.lastTick === null ? state.lastTick : null
+    nextEliminationTime: typeof state.nextEliminationTime === 'string' || state.nextEliminationTime === null ? state.nextEliminationTime : null
   };
 
   const addUnique = (list, value) => {
@@ -148,7 +148,9 @@ function addPlayer(state, username) {
   // Start game if we have at least 2 players
   if (state.alivePlayers.length >= 2 && !state.gameStarted) {
     state.gameStarted = true;
+    state.nextEliminationTime = new Date(Date.now() + 5 * 60 * 1000).toISOString();
     state.lastEvent = `🎮 ${username} has joined! The battle has begun with ${state.alivePlayers.length} players!`;
+    console.log(`Next elimination scheduled for: ${state.nextEliminationTime}`);
   }
   
   return true;
@@ -171,33 +173,23 @@ function formatDuration(ms) {
  * Get next event timing info
  */
 function getNextEventInfo(state) {
-  const intervalMs = 5 * 60 * 1000;
-  if (!state.lastTick) {
-    return {
-      lastTickText: 'Unknown',
-      nextTickText: 'Unknown (awaiting next scheduled tick)'
-    };
+  if (!state.nextEliminationTime || !state.gameStarted) {
+    return 'Waiting for game to start';
   }
 
-  const lastTickMs = Date.parse(state.lastTick);
-  if (Number.isNaN(lastTickMs)) {
-    return {
-      lastTickText: 'Unknown',
-      nextTickText: 'Unknown (awaiting next scheduled tick)'
-    };
+  const nextEventMs = Date.parse(state.nextEliminationTime);
+  if (Number.isNaN(nextEventMs)) {
+    return 'Unknown';
   }
 
-  const nextTickMs = lastTickMs + intervalMs;
   const nowMs = Date.now();
-  const deltaMs = nextTickMs - nowMs;
-  const relative = deltaMs >= 0
-    ? `${formatDuration(deltaMs)} from now`
-    : `${formatDuration(-deltaMs)} ago`;
-
-  return {
-    lastTickText: new Date(lastTickMs).toISOString(),
-    nextTickText: `${relative} (${new Date(nextTickMs).toISOString()})`
-  };
+  const deltaMs = nextEventMs - nowMs;
+  
+  if (deltaMs < 0) {
+    return 'Any moment now...';
+  }
+  
+  return `${formatDuration(deltaMs)} from now`;
 }
 
 /**
@@ -236,8 +228,13 @@ function runGameTick(state) {
   if (state.alivePlayers.length === 1) {
     const winner = state.alivePlayers[0];
     state.winner = winner;
+    state.nextEliminationTime = null;
     state.lastEvent = `💀 ${eliminatedPlayer} has been eliminated!\n👑 ${winner} is the winner of Season ${state.season}!`;
     console.log(`Winner: ${winner}`);
+  } else {
+    // Schedule next elimination
+    state.nextEliminationTime = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+    console.log(`Next elimination scheduled for: ${state.nextEliminationTime}`);
   }
 }
 
@@ -250,6 +247,7 @@ function resetSeason(state) {
   state.alivePlayers = [];
   state.eliminatedPlayers = [];
   state.winner = null;
+  state.nextEliminationTime = null;
   state.lastEvent = `Season ${state.season} is ready! Open an issue to join the battle!`;
   console.log(`Reset to Season ${state.season}`);
 }
@@ -259,7 +257,7 @@ function resetSeason(state) {
  */
 function updateReadme(state) {
   const lines = [];
-  const nextEventInfo = getNextEventInfo(state);
+  const nextEventText = getNextEventInfo(state);
   
   lines.push('# 🎮 GitHub Wars - Battle Royale');
   lines.push('');
@@ -298,8 +296,7 @@ function updateReadme(state) {
   }
   
   lines.push(`- **Last Event:** ${state.lastEvent}`);
-  lines.push(`- **Last Tick:** ${nextEventInfo.lastTickText}`);
-  lines.push(`- **Next Event:** ${nextEventInfo.nextTickText}`);
+  lines.push(`- **Next Elimination:** ${nextEventText}`);
   lines.push('');
   lines.push('---');
   lines.push('');
@@ -413,9 +410,6 @@ async function main() {
     
   } else if (EVENT_NAME === 'schedule' || EVENT_NAME === 'workflow_dispatch') {
     console.log('Processing scheduled game tick...');
-
-    // Track scheduled tick time
-    state.lastTick = new Date().toISOString();
     
     // Run game tick
     runGameTick(state);
@@ -437,8 +431,8 @@ async function main() {
   }
   
   // Save state and update README
-  if (!Object.prototype.hasOwnProperty.call(state, 'lastTick')) {
-    state.lastTick = null;
+  if (!Object.prototype.hasOwnProperty.call(state, 'nextEliminationTime')) {
+    state.nextEliminationTime = null;
   }
   saveState(state);
   updateReadme(state);

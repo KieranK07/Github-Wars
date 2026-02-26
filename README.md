@@ -19,8 +19,7 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 **2 players** are fighting for survival!
 
 - **Last Event:** 🎮 crgfrd5d9r-png has joined! The battle has begun with 2 players!
-- **Last Tick:** Unknown
-- **Next Event:** Unknown (awaiting next scheduled tick)
+- **Next Elimination:** Waiting for game to start
 
 ---
 

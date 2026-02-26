@@ -38,5 +38,4 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add players.json README.md
-          git diff --staged --quiet || git commit -m "🎮 Game update: $(date)"
-          git push
+          git diff --staged --quiet || (git commit -m "🎮 Game update: $(date)" && git pull --rebase && git push)

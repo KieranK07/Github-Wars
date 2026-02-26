@@ -26,13 +26,7 @@ function loadGameState() {
     const data = fs.readFileSync(PLAYERS_FILE, 'utf8');
     const state = JSON.parse(data);
     
-    // Validate state structure
-    if (!state.alivePlayers || !state.eliminatedPlayers) {
-      console.log('Invalid state structure, resetting');
-      return createDefaultState();
-    }
-    
-    return state;
+    return normalizeState(state, { logPrefix: 'Load' });
   } catch (error) {
     console.error('Error loading game state:', error.message);
     console.log('Creating default state');
@@ -50,8 +44,61 @@ function createDefaultState() {
     alivePlayers: [],
     eliminatedPlayers: [],
     winner: null,
-    lastEvent: 'Waiting for players to join...'
+    lastEvent: 'Waiting for players to join...',
+    lastTick: null
   };
+}
+
+/**
+ * Normalize state so players.json always uses a valid schema
+ */
+function normalizeState(rawState, options = {}) {
+  const logPrefix = options.logPrefix ? `${options.logPrefix}: ` : '';
+  const base = createDefaultState();
+  const state = rawState && typeof rawState === 'object' ? rawState : {};
+
+  const normalized = {
+    season: Number.isInteger(state.season) && state.season > 0 ? state.season : base.season,
+    gameStarted: typeof state.gameStarted === 'boolean' ? state.gameStarted : base.gameStarted,
+    alivePlayers: [],
+    eliminatedPlayers: [],
+    winner: typeof state.winner === 'string' ? state.winner : null,
+    lastEvent: typeof state.lastEvent === 'string' ? state.lastEvent : base.lastEvent,
+    lastTick: typeof state.lastTick === 'string' || state.lastTick === null ? state.lastTick : null
+  };
+
+  const addUnique = (list, value) => {
+    if (!value || typeof value !== 'string') {
+      return;
+    }
+    if (!list.includes(value)) {
+      list.push(value);
+    }
+  };
+
+  if (Array.isArray(state.alivePlayers)) {
+    state.alivePlayers.forEach((player) => addUnique(normalized.alivePlayers, player));
+  }
+  if (Array.isArray(state.eliminatedPlayers)) {
+    state.eliminatedPlayers.forEach((player) => addUnique(normalized.eliminatedPlayers, player));
+  }
+
+  // Remove any eliminated players from alive list to keep lists consistent
+  if (normalized.eliminatedPlayers.length > 0 && normalized.alivePlayers.length > 0) {
+    normalized.alivePlayers = normalized.alivePlayers.filter(
+      (player) => !normalized.eliminatedPlayers.includes(player)
+    );
+  }
+
+  if (normalized.winner && !normalized.alivePlayers.includes(normalized.winner)) {
+    normalized.winner = null;
+  }
+
+  if (rawState && JSON.stringify(rawState) !== JSON.stringify(normalized)) {
+    console.log(`${logPrefix}State normalized for safe storage`);
+  }
+
+  return normalized;
 }
 
 /**
@@ -59,7 +106,8 @@ function createDefaultState() {
  */
 function saveState(state) {
   try {
-    fs.writeFileSync(PLAYERS_FILE, JSON.stringify(state, null, 2), 'utf8');
+    const normalized = normalizeState(state, { logPrefix: 'Save' });
+    fs.writeFileSync(PLAYERS_FILE, JSON.stringify(normalized, null, 2), 'utf8');
     console.log('Game state saved successfully');
   } catch (error) {
     console.error('Error saving game state:', error.message);
@@ -104,6 +152,52 @@ function addPlayer(state, username) {
   }
   
   return true;
+}
+
+/**
+ * Format a duration in milliseconds into a short string
+ */
+function formatDuration(ms) {
+  const totalMinutes = Math.max(0, Math.round(ms / 60000));
+  if (totalMinutes < 60) {
+    return `${totalMinutes} min`;
+  }
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return minutes === 0 ? `${hours} hr` : `${hours} hr ${minutes} min`;
+}
+
+/**
+ * Get next event timing info
+ */
+function getNextEventInfo(state) {
+  const intervalMs = 30 * 60 * 1000;
+  if (!state.lastTick) {
+    return {
+      lastTickText: 'Unknown',
+      nextTickText: 'Unknown (awaiting next scheduled tick)'
+    };
+  }
+
+  const lastTickMs = Date.parse(state.lastTick);
+  if (Number.isNaN(lastTickMs)) {
+    return {
+      lastTickText: 'Unknown',
+      nextTickText: 'Unknown (awaiting next scheduled tick)'
+    };
+  }
+
+  const nextTickMs = lastTickMs + intervalMs;
+  const nowMs = Date.now();
+  const deltaMs = nextTickMs - nowMs;
+  const relative = deltaMs >= 0
+    ? `${formatDuration(deltaMs)} from now`
+    : `${formatDuration(-deltaMs)} ago`;
+
+  return {
+    lastTickText: new Date(lastTickMs).toISOString(),
+    nextTickText: `${relative} (${new Date(nextTickMs).toISOString()})`
+  };
 }
 
 /**
@@ -165,6 +259,7 @@ function resetSeason(state) {
  */
 function updateReadme(state) {
   const lines = [];
+  const nextEventInfo = getNextEventInfo(state);
   
   lines.push('# 🎮 GitHub Wars - Battle Royale');
   lines.push('');
@@ -202,7 +297,9 @@ function updateReadme(state) {
     lines.push('');
   }
   
-  lines.push(`**Last Event:** ${state.lastEvent}`);
+  lines.push(`- **Last Event:** ${state.lastEvent}`);
+  lines.push(`- **Last Tick:** ${nextEventInfo.lastTickText}`);
+  lines.push(`- **Next Event:** ${nextEventInfo.nextTickText}`);
   lines.push('');
   lines.push('---');
   lines.push('');
@@ -316,6 +413,9 @@ async function main() {
     
   } else if (EVENT_NAME === 'schedule' || EVENT_NAME === 'workflow_dispatch') {
     console.log('Processing scheduled game tick...');
+
+    // Track scheduled tick time
+    state.lastTick = new Date().toISOString();
     
     // Run game tick
     runGameTick(state);
@@ -337,6 +437,9 @@ async function main() {
   }
   
   // Save state and update README
+  if (!Object.prototype.hasOwnProperty.call(state, 'lastTick')) {
+    state.lastTick = null;
+  }
   saveState(state);
   updateReadme(state);
   

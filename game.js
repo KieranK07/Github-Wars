@@ -171,7 +171,7 @@ function formatDuration(ms) {
  * Get next event timing info
  */
 function getNextEventInfo(state) {
-  const intervalMs = 30 * 60 * 1000;
+  const intervalMs = 5 * 60 * 1000;
   if (!state.lastTick) {
     return {
       lastTickText: 'Unknown',
@@ -269,7 +269,7 @@ function updateReadme(state) {
   lines.push('');
   lines.push('**Open a new Issue to join the game!** Your GitHub username will be automatically added to the current season.');
   lines.push('');
-  lines.push('- Every 30 minutes, one random player is eliminated');
+  lines.push('- Every 5 minutes, one random player is eliminated');
   lines.push('- Last player standing wins the season');
   lines.push('- New season starts automatically after a winner is declared');
   lines.push('');
@@ -333,14 +333,14 @@ function updateReadme(state) {
   lines.push('## 📜 Game Rules');
   lines.push('');
   lines.push('1. **Join:** Open any issue to join the current season');
-  lines.push('2. **Battle:** Every 30 minutes, one player is randomly eliminated');
+  lines.push('2. **Battle:** Every 5 minutes, one player is randomly eliminated');
   lines.push('3. **Win:** Last player standing wins the season');
   lines.push('4. **New Season:** Game resets automatically after a winner is declared');
   lines.push('5. **No Rejoining:** Cannot rejoin during the same season once eliminated');
   lines.push('');
   lines.push('---');
   lines.push('');
-  lines.push('*Powered by GitHub Actions • Updates every 30 minutes*');
+  lines.push('*Powered by GitHub Actions • Updates every 5 minutes*');
   
   const content = lines.join('\n');
   
@@ -434,15 +434,6 @@ async function main() {
       // Now reset for next season
       resetSeason(state);
     }
-  } else if (EVENT_NAME === 'timer_update') {
-    console.log('Processing timer update only...');
-    
-    // Only update README with fresh timer, don't modify game state
-    updateReadme(state);
-    
-    console.log('');
-    console.log('=== Execution Complete ===');
-    return;
   }
   
   // Save state and update README

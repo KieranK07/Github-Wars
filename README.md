@@ -6,7 +6,7 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 
 **Open a new Issue to join the game!** Your GitHub username will be automatically added to the current season.
 
-- Every 30 minutes, one random player is eliminated
+- Every 5 minutes, one random player is eliminated
 - Last player standing wins the season
 - New season starts automatically after a winner is declared
 
@@ -38,11 +38,11 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 ## 📜 Game Rules
 
 1. **Join:** Open any issue to join the current season
-2. **Battle:** Every 30 minutes, one player is randomly eliminated
+2. **Battle:** Every 5 minutes, one player is randomly eliminated
 3. **Win:** Last player standing wins the season
 4. **New Season:** Game resets automatically after a winner is declared
 5. **No Rejoining:** Cannot rejoin during the same season once eliminated
 
 ---
 
-*Powered by GitHub Actions • Updates every 30 minutes*
+*Powered by GitHub Actions • Updates every 5 minutes*

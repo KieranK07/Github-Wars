@@ -1,9 +1,11 @@
 {
   "season": 5,
   "gameStarted": false,
-  "alivePlayers": [],
+  "alivePlayers": [
+    "KieranK07"
+  ],
   "eliminatedPlayers": [],
   "winner": null,
-  "lastEvent": "Season 5 is ready! Open an issue to join the battle!",
+  "lastEvent": "🎮 KieranK07 has joined the battle!",
   "nextEliminationTime": null
 }

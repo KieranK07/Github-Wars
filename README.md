@@ -18,14 +18,14 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 
 Open an issue to join the battle!
 
-- **Last Event:** Season 5 is ready! Open an issue to join the battle!
+- **Last Event:** 🎮 KieranK07 has joined the battle!
 - **Next Elimination:** Waiting for game to start
 
 ---
 
-### 💚 Alive Players (0)
+### 💚 Alive Players (1)
 
-*No players alive*
+1. **[@KieranK07](https://github.com/KieranK07)**
 
 ### 💀 Eliminated Players (0)
 

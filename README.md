@@ -31,8 +31,6 @@ Open an issue to join the battle!
 
 *No eliminations yet*
 
----
-
 ## 📜 Game Rules
 
 1. **Join:** Open any issue to join the current season

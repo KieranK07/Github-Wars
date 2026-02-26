@@ -12,13 +12,13 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 
 ---
 
-## 📊 Season 6 Status
+## 📊 Season 1 Status
 
 ### 🎯 Waiting for Players
 
 Open an issue to join the battle!
 
-- **Last Event:** Season 6 is ready! Open an issue to join the battle!
+- **Last Event:** Season 1 is ready! Open an issue to join the battle!
 - **Next Elimination:** Waiting for game to start
 
 ---
@@ -30,6 +30,12 @@ Open an issue to join the battle!
 ### 💀 Eliminated Players (0)
 
 *No eliminations yet*
+
+---
+
+## 🏆 Season Winners
+
+*No winners yet*
 
 ---
 

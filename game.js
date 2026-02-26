@@ -45,7 +45,9 @@ function createDefaultState() {
     eliminatedPlayers: [],
     winner: null,
     lastEvent: 'Waiting for players to join...',
-    nextEliminationTime: null
+    nextEliminationTime: null,
+    pendingReset: false,
+    winners: []
   };
 }
 
@@ -64,7 +66,9 @@ function normalizeState(rawState, options = {}) {
     eliminatedPlayers: [],
     winner: typeof state.winner === 'string' ? state.winner : null,
     lastEvent: typeof state.lastEvent === 'string' ? state.lastEvent : base.lastEvent,
-    nextEliminationTime: typeof state.nextEliminationTime === 'string' || state.nextEliminationTime === null ? state.nextEliminationTime : null
+    nextEliminationTime: typeof state.nextEliminationTime === 'string' || state.nextEliminationTime === null ? state.nextEliminationTime : null,
+    pendingReset: typeof state.pendingReset === 'boolean' ? state.pendingReset : base.pendingReset,
+    winners: []
   };
 
   const addUnique = (list, value) => {
@@ -81,6 +85,22 @@ function normalizeState(rawState, options = {}) {
   }
   if (Array.isArray(state.eliminatedPlayers)) {
     state.eliminatedPlayers.forEach((player) => addUnique(normalized.eliminatedPlayers, player));
+  }
+
+  if (Array.isArray(state.winners)) {
+    state.winners.forEach((entry) => {
+      if (!entry || typeof entry !== 'object') {
+        return;
+      }
+      const season = Number.isInteger(entry.season) ? entry.season : null;
+      const username = typeof entry.username === 'string' ? entry.username : null;
+      if (!season || !username) {
+        return;
+      }
+      if (!normalized.winners.some((winner) => winner.season === season)) {
+        normalized.winners.push({ season, username });
+      }
+    });
   }
 
   // Remove any eliminated players from alive list to keep lists consistent
@@ -149,6 +169,7 @@ function addPlayer(state, username) {
   if (state.alivePlayers.length >= 2 && !state.gameStarted) {
     state.gameStarted = true;
     state.nextEliminationTime = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+    state.pendingReset = false;
     state.lastEvent = `🎮 ${username} has joined! The battle has begun with ${state.alivePlayers.length} players!`;
     console.log(`Next elimination scheduled for: ${state.nextEliminationTime}`);
   }
@@ -206,13 +227,12 @@ function runGameTick(state) {
   if (state.alivePlayers.length === 1) {
     const winner = state.alivePlayers[0];
     state.winner = winner;
+    state.pendingReset = true;
+    state.gameStarted = false;
+    state.nextEliminationTime = null;
     state.lastEvent = `👑 ${winner} is the winner of Season ${state.season}!`;
     console.log(`Winner: ${winner}`);
-    
-    // Reset for next season
-    setTimeout(() => {
-      resetSeason(state);
-    }, 0);
+    recordWinner(state, winner);
     return;
   }
   
@@ -228,13 +248,28 @@ function runGameTick(state) {
   if (state.alivePlayers.length === 1) {
     const winner = state.alivePlayers[0];
     state.winner = winner;
+    state.pendingReset = true;
+    state.gameStarted = false;
     state.nextEliminationTime = null;
     state.lastEvent = `💀 ${eliminatedPlayer} has been eliminated!\n👑 ${winner} is the winner of Season ${state.season}!`;
     console.log(`Winner: ${winner}`);
+    recordWinner(state, winner);
   } else {
     // Schedule next elimination
     state.nextEliminationTime = new Date(Date.now() + 5 * 60 * 1000).toISOString();
     console.log(`Next elimination scheduled for: ${state.nextEliminationTime}`);
+  }
+}
+
+/**
+ * Record a season winner
+ */
+function recordWinner(state, username) {
+  if (!state.winners) {
+    state.winners = [];
+  }
+  if (!state.winners.some((entry) => entry.season === state.season)) {
+    state.winners.push({ season: state.season, username });
   }
 }
 
@@ -248,6 +283,7 @@ function resetSeason(state) {
   state.eliminatedPlayers = [];
   state.winner = null;
   state.nextEliminationTime = null;
+  state.pendingReset = false;
   state.lastEvent = `Season ${state.season} is ready! Open an issue to join the battle!`;
   console.log(`Reset to Season ${state.season}`);
 }
@@ -327,6 +363,21 @@ function updateReadme(state) {
   
   lines.push('---');
   lines.push('');
+  lines.push('## 🏆 Season Winners');
+  lines.push('');
+  if (state.winners && state.winners.length > 0) {
+    state.winners
+      .slice()
+      .sort((a, b) => b.season - a.season)
+      .forEach((entry, index) => {
+        lines.push(`${index + 1}. Season ${entry.season}: **[@${entry.username}](https://github.com/${entry.username})**`);
+      });
+  } else {
+    lines.push('*No winners yet*');
+  }
+  lines.push('');
+  lines.push('---');
+  lines.push('');
   lines.push('## 📜 Game Rules');
   lines.push('');
   lines.push('1. **Join:** Open any issue to join the current season');
@@ -401,6 +452,10 @@ async function main() {
   // Handle different event types
   if (EVENT_NAME === 'issues' && ISSUE_AUTHOR) {
     console.log('Processing new player join...');
+
+    if (state.pendingReset) {
+      resetSeason(state);
+    }
     
     // Add player
     addPlayer(state, ISSUE_AUTHOR);
@@ -412,7 +467,7 @@ async function main() {
     console.log('Processing scheduled game tick...');
     
     // If there's a winner, reset for next season
-    if (state.winner && state.winner !== null) {
+    if (state.pendingReset) {
       console.log('Previous winner detected, resetting for new season...');
       resetSeason(state);
     }

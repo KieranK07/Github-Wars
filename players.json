@@ -1,9 +1,11 @@
 {
-  "season": 6,
+  "season": 1,
   "gameStarted": false,
   "alivePlayers": [],
   "eliminatedPlayers": [],
   "winner": null,
-  "lastEvent": "Season 6 is ready! Open an issue to join the battle!",
-  "nextEliminationTime": null
+  "lastEvent": "Season 1 is ready! Open an issue to join the battle!",
+  "nextEliminationTime": null,
+  "pendingReset": false,
+  "winners": []
 }

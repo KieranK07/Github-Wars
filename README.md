@@ -33,12 +33,6 @@ Open an issue to join the battle!
 
 ---
 
-## 🏆 Season Winners
-
-*No winners yet*
-
----
-
 ## 📜 Game Rules
 
 1. **Join:** Open any issue to join the current season
@@ -50,3 +44,9 @@ Open an issue to join the battle!
 ---
 
 *Powered by GitHub Actions • Updates every 5 minutes*
+
+---
+
+## 🏆 Season Winners
+
+*No winners yet*

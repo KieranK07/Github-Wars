@@ -361,6 +361,18 @@ function updateReadme(state) {
   }
   lines.push('');
   
+  lines.push('## 📜 Game Rules');
+  lines.push('');
+  lines.push('1. **Join:** Open any issue to join the current season');
+  lines.push('2. **Battle:** Every 5 minutes, one player is randomly eliminated');
+  lines.push('3. **Win:** Last player standing wins the season');
+  lines.push('4. **New Season:** Game resets automatically after a winner is declared');
+  lines.push('5. **No Rejoining:** Cannot rejoin during the same season once eliminated');
+  lines.push('');
+  lines.push('---');
+  lines.push('');
+  lines.push('*Powered by GitHub Actions • Updates every 5 minutes*');
+  lines.push('');
   lines.push('---');
   lines.push('');
   lines.push('## 🏆 Season Winners');
@@ -375,20 +387,6 @@ function updateReadme(state) {
   } else {
     lines.push('*No winners yet*');
   }
-  lines.push('');
-  lines.push('---');
-  lines.push('');
-  lines.push('## 📜 Game Rules');
-  lines.push('');
-  lines.push('1. **Join:** Open any issue to join the current season');
-  lines.push('2. **Battle:** Every 5 minutes, one player is randomly eliminated');
-  lines.push('3. **Win:** Last player standing wins the season');
-  lines.push('4. **New Season:** Game resets automatically after a winner is declared');
-  lines.push('5. **No Rejoining:** Cannot rejoin during the same season once eliminated');
-  lines.push('');
-  lines.push('---');
-  lines.push('');
-  lines.push('*Powered by GitHub Actions • Updates every 5 minutes*');
   
   const content = lines.join('\n');
   

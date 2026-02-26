@@ -14,18 +14,19 @@ An automated multiplayer Battle Royale game running entirely through GitHub Acti
 
 ## 📊 Season 4 Status
 
-### 🎯 Waiting for Players
+### ⚔️ Battle in Progress
 
-Open an issue to join the battle!
+**2 players** are fighting for survival!
 
-- **Last Event:** 🎮 KieranK07 has joined the battle!
-- **Next Elimination:** Waiting for game to start
+- **Last Event:** 🎮 crgfrd5d9r-png has joined! The battle has begun with 2 players!
+- **Next Elimination:** 5 min from now
 
 ---
 
-### 💚 Alive Players (1)
+### 💚 Alive Players (2)
 
 1. **[@KieranK07](https://github.com/KieranK07)**
+2. **[@crgfrd5d9r-png](https://github.com/crgfrd5d9r-png)**
 
 ### 💀 Eliminated Players (0)
 

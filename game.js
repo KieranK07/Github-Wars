@@ -411,22 +411,27 @@ async function main() {
   } else if (EVENT_NAME === 'schedule' || EVENT_NAME === 'workflow_dispatch') {
     console.log('Processing scheduled game tick...');
     
+    // If there's a winner, reset for next season
+    if (state.winner && state.winner !== null) {
+      console.log('Previous winner detected, resetting for new season...');
+      resetSeason(state);
+    }
+    
     // Run game tick
     runGameTick(state);
     
-    // If there's a winner, reset for next season
+    // If we just created a winner, save and display it
     if (state.winner && state.alivePlayers.length === 1) {
-      // Keep winner displayed for this update
-      // Schedule will reset on next run
-      const currentWinner = state.winner;
-      const currentSeason = state.season;
-      
-      // Save current state with winner
+      console.log(`Winner declared: ${state.winner}`);
+      // Save state and update README
+      if (!Object.prototype.hasOwnProperty.call(state, 'nextEliminationTime')) {
+        state.nextEliminationTime = null;
+      }
       saveState(state);
       updateReadme(state);
-      
-      // Now reset for next season
-      resetSeason(state);
+      console.log('');
+      console.log('=== Execution Complete ===');
+      return;
     }
   }
   
